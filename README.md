@@ -1,131 +1,116 @@
 # Claude MCP Data Explorer for Windows
 
-A Model Context Protocol (MCP) server implementation for Windows that enables advanced data exploration using Claude. This server acts as a personal Data Scientist assistant, transforming complex datasets into clear, actionable insights.
+A TypeScript implementation of a Model Context Protocol (MCP) server for data exploration with Claude. This server integrates with Claude Desktop and enables advanced data analysis by providing tools to load CSV files and execute JavaScript data analysis scripts.
 
-## Features
+## Prerequisites
 
-- Load and analyze CSV data of any size
-- Execute Python scripts with pandas, numpy, scikit-learn, and other data science libraries
-- Generate visualizations and insights automatically
-- Windows-specific setup and optimization
+- Node.js v16+ - [Download Node.js](https://nodejs.org/)
+- Claude Desktop - [Download Claude Desktop](https://claude.ai/download)
 
-## 🚀 Getting Started
-
-### Prerequisites
-
-1. **Python 3.10+** - [Download Python](https://www.python.org/downloads/windows/)
-2. **Claude Desktop** - [Download Claude Desktop](https://claude.ai/download)
-
-### Installation
+## Installation
 
 1. **Clone this repository**
-   ```powershell
+   ```cmd
    git clone https://github.com/tofunori/claude-mcp-data-explorer.git
    cd claude-mcp-data-explorer
    ```
 
-2. **Set up a virtual environment**
-   ```powershell
-   python -m venv venv
-   .\venv\Scripts\activate
+2. **Install dependencies**
+   ```cmd
+   npm install
    ```
 
-3. **Install dependencies**
-   ```powershell
-   pip install -r requirements.txt
+3. **Run setup script**
+   ```cmd
+   node setup.js
    ```
 
-4. **Run the setup script**
-   ```powershell
-   python setup.py
-   ```
+4. **Restart Claude Desktop and enable Developer Mode**
+   - Open Claude Desktop
+   - Go to Help → Enable Developer Mode
+   - Restart Claude Desktop
 
-### Configuration
+## How It Works
 
-The setup script will automatically configure the Claude Desktop application to use this MCP server. It will:
+This MCP server provides two main tools for Claude:
 
-1. Locate the Claude Desktop configuration file
-2. Register the data explorer MCP server
-3. Create necessary directories for data storage
+1. **load-csv** - Loads CSV data into memory for analysis
+2. **run-script** - Executes JavaScript code for data processing and analysis
 
-## 📊 Using the Data Explorer
+It also includes a prompt template that guides Claude through a structured data exploration process.
+
+## Usage
 
 1. **Start Claude Desktop**
 
-2. **Select the explore-data prompt template**
-   - This template will appear in Claude Desktop once the server is properly configured
+2. **Select the "Explore Data" prompt template**
+   - This prompt will appear in Claude Desktop after setup
 
-3. **Provide the required inputs:**
-   - `csv_path`: Full path to your CSV file
-   - `topic`: The specific aspect of the data you want to explore (e.g., "Housing price trends in California")
+3. **Enter CSV file path and exploration topic**
+   - Example file path: `C:/Users/YourName/Documents/data.csv`
+   - Example topic: "Sales trends by region"
 
 4. **Let Claude analyze your data**
-   - The server will handle loading the data, even for very large files
-   - Claude will automatically generate insights, statistics, and visualizations
+   - Claude will load the CSV file and generate insights automatically
+   - The server handles large files efficiently using chunking
 
-## 🧰 Available Tools
-
-### Data Loading
-- **load-csv**: Loads a CSV file into a DataFrame
-  - `csv_path` (string, required): Path to the CSV file
-  - `df_name` (string, optional): Name for the DataFrame. Defaults to df_1, df_2, etc.
-
-### Script Execution
-- **run-script**: Executes a Python script
-  - `script` (string, required): The Python code to execute
-
-## 🔧 Troubleshooting
-
-### Common Issues
+## Troubleshooting
 
 1. **Claude doesn't show the MCP server**
-   - Ensure Claude Desktop is restarted after setup
-   - Check the configuration file at `%APPDATA%\Claude\claude_desktop_config.json`
+   - Check that Claude Desktop is restarted after setup
+   - Verify the configuration file at `%APPDATA%\\Claude\\claude_desktop_config.json`
+   - Enable Developer Mode and check the MCP Log File
 
-2. **Error loading large CSV files**
-   - The server is designed to handle large files efficiently using chunking
-   - Ensure you have sufficient RAM available
+2. **Permission errors reading files**
+   - Make sure Claude has access to the CSV file location
+   - Try using absolute paths with forward slashes (`/`) or escaped backslashes (`\\`)
 
-3. **Script execution fails**
-   - Check for Python syntax errors
-   - Verify all required libraries are imported in your script
+3. **JavaScript errors in scripts**
+   - Check that your script is compatible with the allowed modules
+   - Review any error messages in Claude's response
 
-### Logs
+## Configuration
 
-Log files are stored in the `logs` directory of this repository. Check these files for detailed error information.
+The MCP server configuration is automatically added to Claude Desktop by the setup script. If you need to manually configure it:
 
-## 🛠️ Advanced Configuration
-
-### Custom Dependencies
-
-You can add additional Python libraries by editing the `requirements.txt` file and running:
-```powershell
-pip install -r requirements.txt
-```
-
-### Manual Configuration
-
-To manually configure Claude Desktop on Windows:
-
-1. Open `%APPDATA%\Claude\claude_desktop_config.json`
-2. Add the server configuration:
+1. Open `%APPDATA%\\Claude\\claude_desktop_config.json`
+2. Add or update the `mcpServers` section:
    ```json
    "mcpServers": {
      "claude-mcp-data-explorer": {
-       "command": "python",
+       "command": "npx",
        "args": [
-         "-m",
-         "claude_mcp_data_explorer"
+         "ts-node",
+         "C:/path/to/claude-mcp-data-explorer/src/index.ts"
        ]
      }
    }
    ```
 
-## 📝 License
+## Development
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+- **Build TypeScript code**
+  ```cmd
+  npm run build
+  ```
 
-## 🙏 Acknowledgments
+- **Run in development mode**
+  ```cmd
+  npm run dev
+  ```
 
-- Inspired by [reading-plus-ai/mcp-server-data-exploration](https://github.com/reading-plus-ai/mcp-server-data-exploration)
-- Uses the [Anthropic Model Context Protocol](https://modelcontextprotocol.io/introduction)
+- **Modify prompt templates**
+  - Edit `src/prompts.ts` to customize the data exploration guidance
+
+- **Add new tools**
+  - Register new tools in `src/index.ts`
+  - Implement tool handlers in the `src/tools` directory
+
+## License
+
+MIT License - see LICENSE file for details.
+
+## Acknowledgments
+
+- Based on the official MCP TypeScript SDK from Anthropic
+- Thanks to the MCP community for examples and inspiration
