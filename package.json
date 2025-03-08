@@ -22,13 +22,11 @@
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.0",
     "csv-parse": "^5.5.3",
-    "fs-extra": "^11.2.0",
     "papaparse": "^5.4.1",
     "plotly.js-dist-min": "^2.29.0",
     "simple-statistics": "^7.8.3"
   },
   "devDependencies": {
-    "@types/fs-extra": "^11.0.4",
     "@types/node": "^20.10.4",
     "@types/papaparse": "^5.3.14",
     "ts-node": "^10.9.2",
