@@ -1,4 +1,4 @@
-import * as fs from 'fs-extra';
+import fs from 'fs';
 import * as path from 'path';
 import Papa from 'papaparse';
 import * as ss from 'simple-statistics';
