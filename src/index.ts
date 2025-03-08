@@ -1,6 +1,6 @@
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import * as fs from 'fs-extra';
+import fs from 'fs';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
@@ -21,17 +21,18 @@ const __dirname = dirname(__filename);
 
 // Create logs directory for storing MCP server logs
 const logsDir = path.join(__dirname, '..', 'logs');
-fs.ensureDirSync(logsDir);
+if (!fs.existsSync(logsDir)) {
+  fs.mkdirSync(logsDir, { recursive: true });
+}
 
 // Configure logging
 const logFile = path.join(logsDir, `server_${new Date().toISOString().replace(/:/g, '-')}.log`);
-const logger = fs.createWriteStream(logFile, { flags: 'a' });
 
 function log(message: string) {
   const timestamp = new Date().toISOString();
   const logMessage = `${timestamp} - ${message}`;
   console.error(logMessage); // Use stderr for server logs to avoid interfering with protocol communication
-  logger.write(logMessage + '\n');
+  fs.appendFileSync(logFile, logMessage + '\n');
 }
 
 async function main() {
@@ -146,19 +147,16 @@ async function main() {
 // Handle process termination
 process.on('SIGINT', () => {
   log('Received SIGINT, shutting down');
-  logger.end();
   process.exit(0);
 });
 
 process.on('SIGTERM', () => {
   log('Received SIGTERM, shutting down');
-  logger.end();
   process.exit(0);
 });
 
 process.on('uncaughtException', (error) => {
   log(`Uncaught exception: ${error}`);
-  logger.end();
   process.exit(1);
 });
 
