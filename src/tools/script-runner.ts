@@ -36,7 +36,7 @@ export async function runScript(args: RunScriptArgs): Promise<{ type: string, te
   
   try {
     // Create a context with available libraries and data
-    const contextObject = {
+    const contextObject: Record<string, any> = {
       // Make loaded data frames available to the script
       ...getAllDataFrames(),
       // Add utilities
