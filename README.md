@@ -7,7 +7,7 @@ A TypeScript implementation of a Model Context Protocol (MCP) server for data ex
 - Node.js v16+ - [Download Node.js](https://nodejs.org/)
 - Claude Desktop - [Download Claude Desktop](https://claude.ai/download)
 
-## Installation
+## Installation (Updated for Windows)
 
 1. **Clone this repository**
    ```cmd
@@ -20,52 +20,30 @@ A TypeScript implementation of a Model Context Protocol (MCP) server for data ex
    npm install
    ```
 
-3. **Run setup script**
+3. **Build and run setup script**
    ```cmd
-   node setup.js
+   npm run setup
    ```
+   This will:
+   - Build the TypeScript code to JavaScript
+   - Configure Claude Desktop to use the compiled JavaScript
+   - Create necessary directories
 
 4. **Restart Claude Desktop and enable Developer Mode**
-   - Open Claude Desktop
+   - Close Claude Desktop completely
+   - Start Claude Desktop
    - Go to Help → Enable Developer Mode
-   - Restart Claude Desktop
 
-## Fixing TypeScript ESM Issues (Important!)
+## Manual Testing
 
-If you encounter errors like `Unknown file extension ".ts"`, follow these steps:
+You can test the server directly by running:
 
-1. **Run the server with the ESM flag**:
-   ```cmd
-   npx ts-node --esm src/index.ts
-   ```
+```cmd
+npm run build
+npm run start
+```
 
-2. **Verify server configuration in Claude Desktop**:
-   - Check configuration file at `%APPDATA%\Claude\claude_desktop_config.json`
-   - Ensure the configuration includes the `--esm` flag:
-   ```json
-   "claude-mcp-data-explorer": {
-     "command": "npx",
-     "args": [
-       "ts-node",
-       "--esm",
-       "C:\\Users\\yourusername\\claude-mcp-data-explorer\\src\\index.ts"
-     ]
-   }
-   ```
-
-3. **Alternatively, build the project and use JavaScript**:
-   ```cmd
-   npm run build
-   ```
-   Then update the configuration to use:
-   ```json
-   "claude-mcp-data-explorer": {
-     "command": "node",
-     "args": [
-       "C:\\Users\\yourusername\\claude-mcp-data-explorer\\dist\\index.js"
-     ]
-   }
-   ```
+The server should start without errors. If you can run this successfully, Claude Desktop should be able to use the server as well.
 
 ## How It Works
 
@@ -94,10 +72,11 @@ It also includes a prompt template that guides Claude through a structured data 
 ## Troubleshooting
 
 1. **Claude doesn't show the MCP server**
-   - Check that Claude Desktop is restarted after setup
-   - Verify the configuration file at `%APPDATA%\\Claude\\claude_desktop_config.json`
-   - Enable Developer Mode and check the MCP Log File
-   - Try running the server manually: `npx ts-node --esm src/index.ts`
+   - Check the configuration file at `%APPDATA%\Claude\claude_desktop_config.json`
+   - It should point to the compiled JavaScript file in the dist directory
+   - Try rebuilding the project with `npm run build`
+   - Enable Developer Mode and check the MCP Log File (Developer → Open MCP Log File)
+   - Use Developer → Reload All MCP Servers to force refresh
 
 2. **Permission errors reading files**
    - Make sure Claude has access to the CSV file location
