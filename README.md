@@ -30,6 +30,43 @@ A TypeScript implementation of a Model Context Protocol (MCP) server for data ex
    - Go to Help → Enable Developer Mode
    - Restart Claude Desktop
 
+## Fixing TypeScript ESM Issues (Important!)
+
+If you encounter errors like `Unknown file extension ".ts"`, follow these steps:
+
+1. **Run the server with the ESM flag**:
+   ```cmd
+   npx ts-node --esm src/index.ts
+   ```
+
+2. **Verify server configuration in Claude Desktop**:
+   - Check configuration file at `%APPDATA%\Claude\claude_desktop_config.json`
+   - Ensure the configuration includes the `--esm` flag:
+   ```json
+   "claude-mcp-data-explorer": {
+     "command": "npx",
+     "args": [
+       "ts-node",
+       "--esm",
+       "C:\\Users\\yourusername\\claude-mcp-data-explorer\\src\\index.ts"
+     ]
+   }
+   ```
+
+3. **Alternatively, build the project and use JavaScript**:
+   ```cmd
+   npm run build
+   ```
+   Then update the configuration to use:
+   ```json
+   "claude-mcp-data-explorer": {
+     "command": "node",
+     "args": [
+       "C:\\Users\\yourusername\\claude-mcp-data-explorer\\dist\\index.js"
+     ]
+   }
+   ```
+
 ## How It Works
 
 This MCP server provides two main tools for Claude:
@@ -60,6 +97,7 @@ It also includes a prompt template that guides Claude through a structured data 
    - Check that Claude Desktop is restarted after setup
    - Verify the configuration file at `%APPDATA%\\Claude\\claude_desktop_config.json`
    - Enable Developer Mode and check the MCP Log File
+   - Try running the server manually: `npx ts-node --esm src/index.ts`
 
 2. **Permission errors reading files**
    - Make sure Claude has access to the CSV file location
@@ -68,43 +106,6 @@ It also includes a prompt template that guides Claude through a structured data 
 3. **JavaScript errors in scripts**
    - Check that your script is compatible with the allowed modules
    - Review any error messages in Claude's response
-
-## Configuration
-
-The MCP server configuration is automatically added to Claude Desktop by the setup script. If you need to manually configure it:
-
-1. Open `%APPDATA%\\Claude\\claude_desktop_config.json`
-2. Add or update the `mcpServers` section:
-   ```json
-   "mcpServers": {
-     "claude-mcp-data-explorer": {
-       "command": "npx",
-       "args": [
-         "ts-node",
-         "C:/path/to/claude-mcp-data-explorer/src/index.ts"
-       ]
-     }
-   }
-   ```
-
-## Development
-
-- **Build TypeScript code**
-  ```cmd
-  npm run build
-  ```
-
-- **Run in development mode**
-  ```cmd
-  npm run dev
-  ```
-
-- **Modify prompt templates**
-  - Edit `src/prompts.ts` to customize the data exploration guidance
-
-- **Add new tools**
-  - Register new tools in `src/index.ts`
-  - Implement tool handlers in the `src/tools` directory
 
 ## License
 
