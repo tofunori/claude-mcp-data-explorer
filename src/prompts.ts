@@ -1,9 +1,9 @@
-import { Prompt } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { McpPrompt } from "@modelcontextprotocol/sdk/server/mcp.js";
 
 /**
  * Creates a prompt template for data exploration
  */
-export function getExploreDataPrompt(): Prompt {
+export function getExploreDataPrompt(): McpPrompt {
   return {
     id: "explore-data",
     name: "Explore Data",
