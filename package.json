@@ -1,0 +1,36 @@
+{
+  "name": "claude-mcp-data-explorer",
+  "version": "0.1.0",
+  "description": "A TypeScript MCP server for data exploration with Claude",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "ts-node src/index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "claude",
+    "mcp",
+    "data",
+    "exploration"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "csv-parse": "^5.5.3",
+    "fs-extra": "^11.2.0",
+    "papaparse": "^5.4.1",
+    "plotly.js-dist-min": "^2.29.0",
+    "simple-statistics": "^7.8.3"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.4",
+    "@types/node": "^20.10.4",
+    "@types/papaparse": "^5.3.14",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.3.3"
+  }
+}
