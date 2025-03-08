@@ -3,9 +3,14 @@
  * This script configures the Claude Desktop application to use this MCP server.
  */
 
-const fs = require('fs');
-const path = require('path');
-const os = require('os');
+import fs from 'fs';
+import path from 'path';
+import os from 'os';
+import { fileURLToPath } from 'url';
+
+// Get the directory name of the current module
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Get the path to Claude Desktop configuration file
 function getConfigPath() {
@@ -122,7 +127,7 @@ function main() {
 }
 
 // Run the main function
-if (require.main === module) {
+if (import.meta.url === `file://${process.argv[1]}`) {
   const success = main();
   process.exit(success ? 0 : 1);
 }
