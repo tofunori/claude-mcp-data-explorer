@@ -66,6 +66,7 @@ function updateClaudeConfig() {
     "command": "npx",
     "args": [
       "ts-node",
+      "--esm",
       path.join(currentDir, "src", "index.ts")
     ]
   };
