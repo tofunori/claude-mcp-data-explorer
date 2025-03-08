@@ -35,8 +35,8 @@ const server = new McpServer({
 
 log('Server initialization started');
 
-// Register tools
-server.registerTool({
+// Define tools
+server.tools.add({
   name: "load-csv",
   description: "Load a CSV file into a DataFrame for analysis",
   inputSchema: {
@@ -53,10 +53,10 @@ server.registerTool({
     },
     required: ["csv_path"]
   },
-  handler: async (args) => {
-    log(`Executing load-csv with args: ${JSON.stringify(args)}`);
+  handler: async (params: Record<string, any>) => {
+    log(`Executing load-csv with args: ${JSON.stringify(params)}`);
     try {
-      const result = await loadCsv(args);
+      const result = await loadCsv(params);
       return result;
     } catch (error) {
       log(`Error executing load-csv: ${error}`);
@@ -65,7 +65,7 @@ server.registerTool({
   }
 });
 
-server.registerTool({
+server.tools.add({
   name: "run-script",
   description: "Execute a JavaScript script for data analysis and visualization",
   inputSchema: {
@@ -78,10 +78,10 @@ server.registerTool({
     },
     required: ["script"]
   },
-  handler: async (args) => {
-    log(`Executing run-script with args: ${JSON.stringify({...args, script: args.script?.substring(0, 100) + '...'})}`);
+  handler: async (params: Record<string, any>) => {
+    log(`Executing run-script with args: ${JSON.stringify({...params, script: params.script?.substring(0, 100) + '...'})}`);
     try {
-      const result = await runScript(args);
+      const result = await runScript(params);
       return result;
     } catch (error) {
       log(`Error executing run-script: ${error}`);
@@ -90,8 +90,8 @@ server.registerTool({
   }
 });
 
-// Register prompts
-server.registerPrompt(getExploreDataPrompt());
+// Add the explore data prompt
+server.prompts.add(getExploreDataPrompt());
 
 // Start the server
 async function main() {
@@ -110,7 +110,7 @@ async function main() {
     }
     
     const transport = new StdioServerTransport();
-    await server.listen(transport);
+    await server.start(transport);
     log('Server started successfully');
   } catch (error) {
     log(`Server error: ${error}`);
