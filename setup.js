@@ -7,6 +7,7 @@ import fs from 'fs';
 import path from 'path';
 import os from 'os';
 import { fileURLToPath } from 'url';
+import { execSync } from 'child_process';
 
 // Get the directory name of the current module
 const __filename = fileURLToPath(import.meta.url);
@@ -61,13 +62,11 @@ function updateClaudeConfig() {
   // Get the current directory path
   const currentDir = path.resolve(__dirname);
   
-  // Add our server configuration
+  // Add our server configuration - using the compiled JavaScript file
   config.mcpServers["claude-mcp-data-explorer"] = {
-    "command": "npx",
+    "command": "node",
     "args": [
-      "ts-node",
-      "--esm",
-      path.join(currentDir, "src", "index.ts")
+      path.join(currentDir, "dist", "index.js")
     ]
   };
   
@@ -93,6 +92,23 @@ function createDirectories() {
   if (!fs.existsSync("data")) {
     fs.mkdirSync("data");
   }
+
+  // Create dist directory if it doesn't exist
+  if (!fs.existsSync("dist")) {
+    fs.mkdirSync("dist");
+  }
+}
+
+// Build the TypeScript code
+function buildTypeScript() {
+  try {
+    console.log("Building TypeScript...");
+    execSync("npm run build", { stdio: 'inherit' });
+    return true;
+  } catch (error) {
+    console.error(`Error building TypeScript: ${error}`);
+    return false;
+  }
 }
 
 // Main function
@@ -109,6 +125,12 @@ function main() {
   // Create necessary directories
   createDirectories();
   
+  // Build TypeScript code
+  if (!buildTypeScript()) {
+    console.error("Failed to build TypeScript code");
+    return false;
+  }
+  
   // Update Claude Desktop config
   if (!updateClaudeConfig()) {
     console.error("Failed to update Claude Desktop configuration");
@@ -118,10 +140,9 @@ function main() {
   console.log("\n=================================================");
   console.log("Setup completed successfully!");
   console.log("Please complete these steps:");
-  console.log("1. Install dependencies: npm install");
-  console.log("2. Restart Claude Desktop app");
-  console.log("3. In Claude Desktop, enable Developer Mode from Help menu");
-  console.log("4. Check the MCP Log File for connection status");
+  console.log("1. Restart Claude Desktop app");
+  console.log("2. In Claude Desktop, enable Developer Mode from Help menu");
+  console.log("3. Check the MCP Log File for connection status");
   console.log("=================================================");
   
   return true;
